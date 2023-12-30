@@ -6,7 +6,7 @@
 </head>
 <body>
 
-<form th:method="PATCH" th:action="@{/edit}" th:object="${editUser}">
+<form th:method="POST" th:action="@{/edit}" th:object="${editUser}">
     <input type="hidden" name="id" th:value="${editUser.getId()}">
     <br>
     <label for="username">Введите имя</label>

@@ -51,10 +51,10 @@ public class HelloController {
         return "/admin/edit";
     }
 
-    @PatchMapping("/edit")
+    @PostMapping("/edit")
     public String update(@RequestParam("id") int id, @ModelAttribute("editUser") @Valid Person updatePerson,
                          BindingResult bindingResult) {
-        if (bindingResult.hasErrors())
+        if (bindingResult.hasErrors() && !(updatePerson.getPassword().isEmpty()))
             return "/edit";
 
         personDetailsService.updateUserById(id,updatePerson);

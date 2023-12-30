@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import ru.kata.spring.boot_security.demo.models.Person;
-import ru.kata.spring.boot_security.demo.services.RegistrationService;
+import ru.kata.spring.boot_security.demo.services.PersonDetailsService;
 import ru.kata.spring.boot_security.demo.util.PersonValidator;
 
 import javax.validation.Valid;
@@ -18,13 +18,13 @@ import javax.validation.Valid;
 public class AuthController {
 
     private final PersonValidator personValidator;
-    private final RegistrationService registrationService;
+    private final PersonDetailsService personDetailsService;
 
     @Autowired
     public AuthController(PersonValidator personValidator,
-                          RegistrationService registrationService) {
+                          PersonDetailsService personDetailsService) {
         this.personValidator = personValidator;
-        this.registrationService = registrationService;
+        this.personDetailsService = personDetailsService;
     }
 
     @GetMapping("/login")
@@ -44,7 +44,7 @@ public class AuthController {
         if (bindingResult.hasErrors())
             return "/auth/registration";
 
-        registrationService.register(person);
+        personDetailsService.register(person);
         return "redirect:/auth/login";
     }
 }

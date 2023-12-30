@@ -19,12 +19,10 @@ import static ru.kata.spring.boot_security.demo.configs.WebSecurityConfig.passwo
 @Service
 public class PersonDetailsService implements UserDetailsService {
     private PeopleRepository peopleRepository;
-    private PasswordEncoder passwordEncoder;
 
     @Autowired
-    public PersonDetailsService(PeopleRepository peopleRepository, PasswordEncoder passwordEncoder) {
+    public PersonDetailsService(PeopleRepository peopleRepository) {
         this.peopleRepository = peopleRepository;
-        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -58,12 +56,20 @@ public class PersonDetailsService implements UserDetailsService {
             person.setAge(personDetails.getAge());
             person.setEmail(personDetails.getEmail());
             person.setRole(personDetails.getRole());
-            person.setPassword(passwordEncoder.encode(person.getPassword()));
+            if (!personDetails.getPassword().isEmpty()) {
+                person.setPassword(passwordEncoder().encode(personDetails.getPassword()));
+            }
 
             peopleRepository.save(person);
         } else {
             throw new RuntimeException("Пользователь с таким id не найден");
         }
+    }
+
+    @Transactional
+    public void register(Person person) {
+        person.setPassword(passwordEncoder().encode(person.getPassword()));
+        peopleRepository.save(person);
     }
 
     public Person getById(int id) {
