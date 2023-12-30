@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <title>ADMIN</title>
+    <style>
+        .logout-btn {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            padding: 10px 20px;
+            background-color: #f2f2f2;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<form th:action="@{/logout}" th:method="POST">
+    <input class="logout-btn" type="submit" value="Выйти">
+</form>
+
+
+<h1>hello admin</h1>
+
+
+<table border="1" style="width: 300px">
+    <thead>
+    <tr>
+        <th scope="col">id   </th>
+        <th scope="col">Имя </th>
+        <th scope="col">фамилия</th>
+        <th scope="col">возраст</th>
+        <th scope="col">почта</th>
+        <th scope="col">роль</th>
+        <th scope="col">зашифрованный пароль</th>
+        <th scope="col">изменить</th>
+        <th scope="col">удалить</th>
+    </tr>
+    </thead>
+    <tbody>
+
+
+    <tr th:each="user : ${person}">
+        <td th:text="${user.getId()}"></td>
+        <td th:text="${user.getUsername()}"></td>
+        <td th:text="${user.getLastName()}"></td>
+        <td th:text="${user.getAge()}"></td>
+        <td th:text="${user.getEmail()}"></td>
+        <td th:text="${user.getRole()}"></td>
+        <td th:text="${user.getPassword()}"></td>
+        <td>
+            <form th:action="@{/edit}" th:method="GET">
+                <input type="hidden" name="id" th:value="${user.getId()}">
+                <button type="submit">Изменить</button>
+            </form>
+        </td>
+        <td>
+            <form th:action="@{/delete}" th:method="DELETE">
+                <input type="hidden" name="id" th:value="${user.getId()}">
+                <button type="submit">Удалить</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<br><br>
+<button onclick="location.href='/auth/registration'">Добавить пользователя в БД</button>
+
+</body>
+</html>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>USER</title>
+    <style>
+        .logout-btn {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            padding: 10px 20px;
+            background-color: #f2f2f2;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<form th:action="@{/logout}" th:method="POST">
+    <input class="logout-btn" type="submit" value="Выйти">
+</form>
+
+
+<button onclick="location.href='/admin'">Войти как админ(нет)</button>
+
+
+<h3>Твои данные</h3>
+<table border="1" style="width: 300px">
+    <thead>
+    <tr>
+        <th scope="col">id   </th>
+        <th scope="col">Имя </th>
+        <th scope="col">фамилия</th>
+        <th scope="col">возраст</th>
+        <th scope="col">почта</th>
+        <th scope="col">роль</th>
+        <th scope="col">зашифрованный пароль</th>
+    </tr>
+    </thead>
+    <tbody>
+
+
+    <tr th:object="${person}">
+        <td th:text="${person.getId()}"></td>
+        <td th:text="${person.getUsername()}"></td>
+        <td th:text="${person.getLastName()}"></td>
+        <td th:text="${person.getAge()}"></td>
+        <td th:text="${person.getEmail()}"></td>
+        <td th:text="${person.getRole()}"></td>
+        <td th:text="${person.getPassword()}"></td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>
