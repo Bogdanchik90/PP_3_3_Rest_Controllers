@@ -37,8 +37,8 @@ public class Person {
     @Column(name = "email")
     private String email;
 
-    @NotEmpty(message = "пароль не может быть пустым")
-    @Size(min = 4, message = "пароль должен быть от 4 символов")
+//    @NotEmpty(message = "пароль не может быть пустым")
+//    @Size(min = 4, message = "пароль должен быть от 4 символов")
     @Column(name = "password")
     private String password;
     @ManyToMany(fetch = FetchType.EAGER)

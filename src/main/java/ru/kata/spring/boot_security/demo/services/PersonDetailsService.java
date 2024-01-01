@@ -8,6 +8,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kata.spring.boot_security.demo.models.Person;
+import ru.kata.spring.boot_security.demo.models.Role;
 import ru.kata.spring.boot_security.demo.repositiries.PeopleRepository;
 import ru.kata.spring.boot_security.demo.repositiries.RoleRepository;
 import ru.kata.spring.boot_security.demo.security.PersonDetails;
@@ -20,10 +21,12 @@ import static ru.kata.spring.boot_security.demo.configs.WebSecurityConfig.passwo
 @Service
 public class PersonDetailsService implements UserDetailsService {
     private PeopleRepository peopleRepository;
+    private final RoleService roleService;
 
     @Autowired
-    public PersonDetailsService(PeopleRepository peopleRepository) {
+    public PersonDetailsService(PeopleRepository peopleRepository, RoleService roleService) {
         this.peopleRepository = peopleRepository;
+        this.roleService = roleService;
     }
 
     @Override
@@ -47,7 +50,7 @@ public class PersonDetailsService implements UserDetailsService {
         peopleRepository.deleteById(id);
     }
     @Transactional
-    public void updateUserById(int id, Person personDetails) {
+    public void updateUserById(int id, Person personDetails, List<Integer> roleIds) {
         Optional<Person> optionalPerson = peopleRepository.findById(id);
         if (optionalPerson.isPresent()) {
             Person person = optionalPerson.get();
@@ -56,11 +59,13 @@ public class PersonDetailsService implements UserDetailsService {
             person.setLastName(personDetails.getLastName());
             person.setAge(personDetails.getAge());
             person.setEmail(personDetails.getEmail());
-            person.setRoles(personDetails.getRoles());
+            if (roleIds != null) {
+                List<Role> selectedRole = roleService.getRolesByIds(roleIds);
+                person.setRoles(selectedRole);
+            }
             if (!personDetails.getPassword().isEmpty()) {
                 person.setPassword(passwordEncoder().encode(personDetails.getPassword()));
             }
-
             peopleRepository.save(person);
         } else {
             throw new RuntimeException("Пользователь с таким id не найден");
@@ -68,7 +73,11 @@ public class PersonDetailsService implements UserDetailsService {
     }
 
     @Transactional
-    public void register(Person person) {
+    public void register(Person person, List<Integer> roleIds) {
+        if (roleIds != null) {
+            List<Role> selectedRole = roleService.getRolesByIds(roleIds);
+            person.setRoles(selectedRole);
+        }
         person.setPassword(passwordEncoder().encode(person.getPassword()));
         peopleRepository.save(person);
     }

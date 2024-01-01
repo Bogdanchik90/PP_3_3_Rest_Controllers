@@ -23,7 +23,7 @@ public class RoleService {
     }
 
 
-    public List<Role> getRolesByIds(List<Long> roleIds) {
+    public List<Role> getRolesByIds(List<Integer> roleIds) {
         return roleRepository.findByIdIn(roleIds);
     }
 

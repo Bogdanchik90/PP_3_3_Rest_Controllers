@@ -6,7 +6,7 @@
 </head>
 <body>
 
-<form th:method="Post" th:action="@{/edit}" th:object="${editUser}">
+<form th:method="PATCH" th:action="@{/edit}" th:object="${editUser}">
     <input type="hidden" name="id" th:value="${editUser.getId()}">
     <br>
     <label for="username">Введите имя</label>
@@ -25,12 +25,12 @@
     <input type="text" th:field="*{email}" id="email">
     <div style="color: red" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
     <br>
-    <label>Введите роль: </label>
-    <label>
-        <input type="checkbox" th:field="*{role}" value="ROLE_ADMIN"> Администратор
-    </label>
-    <label>
-        <input type="checkbox" th:field="*{role}" value="ROLE_USER"> Пользователь
+    <label>Роль:
+        <input type="checkbox" name="roles"
+        th:each="role : ${roles}"
+        th:text="${role.getName()}"
+        th:value="${role.getId()}"
+        th:field="*{roles}">
     </label>
     <br>
     <label for="password">Введите пароль</label>
