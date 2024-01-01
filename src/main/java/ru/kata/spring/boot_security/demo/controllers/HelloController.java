@@ -32,38 +32,4 @@ public class HelloController {
         return "/hello/index";
     }
 
-    @GetMapping("/showUserInfo")
-    public String showUserInfo() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        PersonDetails personDetails = (PersonDetails) authentication.getPrincipal();
-        System.out.println(personDetails.getPerson());
-        return "/hello/index";
-    }
-    @GetMapping("/admin")
-    public String adminPage(Model model) {
-        model.addAttribute("person",personDetailsService.getAllPeople());
-        return "/hello/admin";
-    }
-
-    @GetMapping("/edit")
-    public String editUser(@RequestParam("id") int id, Model model) {
-        model.addAttribute("editUser", personDetailsService.getById(id));
-        return "/admin/edit";
-    }
-
-    @PostMapping("/edit")
-    public String update(@RequestParam("id") int id, @ModelAttribute("editUser") @Valid Person updatePerson,
-                         BindingResult bindingResult) {
-        if (bindingResult.hasErrors() && !(updatePerson.getPassword().isEmpty()))
-            return "/edit";
-
-        personDetailsService.updateUserById(id,updatePerson);
-        return "redirect:/admin";
-    }
-
-    @DeleteMapping("/delete")
-    public String delete(@RequestParam("id") int id) {
-        personDetailsService.deleteById(id);
-        return "redirect:/admin";
-    }
 }

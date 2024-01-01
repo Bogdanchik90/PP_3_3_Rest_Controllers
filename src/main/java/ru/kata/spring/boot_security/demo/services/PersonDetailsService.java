@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kata.spring.boot_security.demo.models.Person;
 import ru.kata.spring.boot_security.demo.repositiries.PeopleRepository;
+import ru.kata.spring.boot_security.demo.repositiries.RoleRepository;
 import ru.kata.spring.boot_security.demo.security.PersonDetails;
 
 import java.util.List;
@@ -55,7 +56,7 @@ public class PersonDetailsService implements UserDetailsService {
             person.setLastName(personDetails.getLastName());
             person.setAge(personDetails.getAge());
             person.setEmail(personDetails.getEmail());
-            person.setRole(personDetails.getRole());
+            person.setRoles(personDetails.getRoles());
             if (!personDetails.getPassword().isEmpty()) {
                 person.setPassword(passwordEncoder().encode(personDetails.getPassword()));
             }

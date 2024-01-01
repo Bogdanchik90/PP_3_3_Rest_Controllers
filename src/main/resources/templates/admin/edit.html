@@ -6,24 +6,24 @@
 </head>
 <body>
 
-<form th:method="POST" th:action="@{/edit}" th:object="${editUser}">
+<form th:method="Post" th:action="@{/edit}" th:object="${editUser}">
     <input type="hidden" name="id" th:value="${editUser.getId()}">
     <br>
     <label for="username">Введите имя</label>
     <input type="text" th:field="*{username}" id="username">
-    <div style="color: red" th:if="${#fields.hasErrors('username')}" th:errors="*{username}">username error</div>
+    <div style="color: red" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></div>
     <br>
     <label for="lastName">Введите фамилию</label>
     <input type="text" th:field="*{lastName}" id="lastName">
-    <div style="color: red" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}">lastName error</div>
+    <div style="color: red" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></div>
     <br>
     <label for="age">Введите возраст</label>
     <input type="text" th:field="*{age}" id="age">
-    <div style="color: red" th:if="${#fields.hasErrors('age')}" th:errors="*{age}">age error</div>
+    <div style="color: red" th:if="${#fields.hasErrors('age')}" th:errors="*{age}"></div>
     <br>
     <label for="email">Введите почту</label>
     <input type="text" th:field="*{email}" id="email">
-    <div style="color: red" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">email error</div>
+    <div style="color: red" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
     <br>
     <label>Введите роль: </label>
     <label>
