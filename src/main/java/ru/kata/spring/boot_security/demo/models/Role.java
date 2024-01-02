@@ -1,6 +1,5 @@
 package ru.kata.spring.boot_security.demo.models;
 
-import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
 import java.util.List;
@@ -18,7 +17,9 @@ public class Role {
     @ManyToMany(mappedBy = "roles", fetch = FetchType.EAGER)
     private List<Person> persons;
 
-    public Role() {}
+    public Role() {
+    }
+
     public Role(int id, String name, List<Person> persons) {
         this.id = id;
         this.name = name;
@@ -50,7 +51,6 @@ public class Role {
     }
 
 
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -64,4 +64,14 @@ public class Role {
         return Objects.hash(id, name);
     }
 
+    @Override
+    public String toString() {
+        if (name.equals("ROLE_ADMIN")) {
+            return "ADMIN";
+        } else if (name.equals("ROLE_USER")) {
+            return "USER";
+        } else {
+            return "ADMIN, USER";
+        }
+    }
 }

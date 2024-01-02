@@ -33,6 +33,7 @@ public class AuthController {
     public String loginPage() {
         return "/auth/login";
     }
+
     @GetMapping("/registration")
     public String registrationPage(@ModelAttribute("person") Person person, Model model) {
         model.addAttribute("roles", roleService.getAllRoles());
@@ -41,7 +42,7 @@ public class AuthController {
 
     @PostMapping("/registration")
     public String performRegistration(@ModelAttribute("person") @Valid Person person,
-                                      @RequestParam(value = "roles",required = false) List<Integer> roleIds,
+                                      @RequestParam(value = "roles", required = false) List<Integer> roleIds,
                                       BindingResult bindingResult) {
         personValidator.validate(person, bindingResult);
 

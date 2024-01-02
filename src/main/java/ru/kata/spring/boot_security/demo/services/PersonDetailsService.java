@@ -4,13 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kata.spring.boot_security.demo.models.Person;
 import ru.kata.spring.boot_security.demo.models.Role;
 import ru.kata.spring.boot_security.demo.repositiries.PeopleRepository;
-import ru.kata.spring.boot_security.demo.repositiries.RoleRepository;
 import ru.kata.spring.boot_security.demo.security.PersonDetails;
 
 import java.util.List;
@@ -38,6 +36,7 @@ public class PersonDetailsService implements UserDetailsService {
 
         return new PersonDetails(person.get());
     }
+
     public List<Person> getAllPeople() {
         return peopleRepository.findAll();
     }
@@ -45,10 +44,12 @@ public class PersonDetailsService implements UserDetailsService {
     public Optional<Person> getPersonByName(String username) {
         return peopleRepository.findByUsername(username);
     }
+
     @Transactional
     public void deleteById(int id) {
         peopleRepository.deleteById(id);
     }
+
     @Transactional
     public void updateUserById(int id, Person personDetails, List<Integer> roleIds) {
         Optional<Person> optionalPerson = peopleRepository.findById(id);

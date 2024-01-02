@@ -4,13 +4,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import ru.kata.spring.boot_security.demo.models.Person;
-import ru.kata.spring.boot_security.demo.models.Role;
-import ru.kata.spring.boot_security.demo.repositiries.RoleRepository;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
 import java.util.stream.Collectors;
 
 public class PersonDetails implements UserDetails {
@@ -20,6 +15,7 @@ public class PersonDetails implements UserDetails {
     public PersonDetails(Person person) {
         this.person = person;
     }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return person.getRoles().stream()

@@ -13,10 +13,12 @@ import ru.kata.spring.boot_security.demo.services.PersonDetailsService;
 public class PersonValidator implements Validator {
 
     private final PersonDetailsService personDetailsService;
+
     @Autowired
     public PersonValidator(PersonDetailsService personDetailsService) {
         this.personDetailsService = personDetailsService;
     }
+
     @Override
     public boolean supports(Class<?> clazz) {
         return Person.class.equals(clazz);

@@ -6,7 +6,6 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.kata.spring.boot_security.demo.models.Person;
-import ru.kata.spring.boot_security.demo.models.Role;
 import ru.kata.spring.boot_security.demo.services.PersonDetailsService;
 import ru.kata.spring.boot_security.demo.services.RoleService;
 import ru.kata.spring.boot_security.demo.util.PersonValidator;
@@ -20,6 +19,7 @@ public class AdminController {
     private final PersonDetailsService personDetailsService;
     private final PersonValidator personValidator;
     private final RoleService roleService;
+
     @Autowired
     public AdminController(PersonDetailsService personDetailsService, PersonValidator personValidator, RoleService roleService) {
         this.personDetailsService = personDetailsService;
@@ -28,10 +28,9 @@ public class AdminController {
     }
 
 
-
     @GetMapping("/admin")
     public String adminPage(Model model) {
-        model.addAttribute("person",personDetailsService.getAllPeople());
+        model.addAttribute("person", personDetailsService.getAllPeople());
         return "/hello/admin";
     }
 
@@ -44,13 +43,15 @@ public class AdminController {
 
     @PatchMapping("/edit")
     public String update(@RequestParam("id") int id, @ModelAttribute("editUser") @Valid Person updatePerson,
-                         @RequestParam(value = "roles",required = false) List<Integer> roleIds,
+                         @RequestParam(value = "roles", required = false) List<Integer> roleIds,
                          BindingResult bindingResult) {
+
+        personValidator.validate(updatePerson, bindingResult);
 
         if (bindingResult.hasErrors() && !(updatePerson.getPassword().isEmpty()))
             return "/admin/edit";
 
-        personDetailsService.updateUserById(id,updatePerson, roleIds);
+        personDetailsService.updateUserById(id, updatePerson, roleIds);
         return "redirect:/admin";
     }
 

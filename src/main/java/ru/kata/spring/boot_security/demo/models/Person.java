@@ -1,13 +1,10 @@
 package ru.kata.spring.boot_security.demo.models;
 
-import org.springframework.security.core.GrantedAuthority;
-
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
-import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
@@ -37,11 +34,11 @@ public class Person {
     @Column(name = "email")
     private String email;
 
-//    @NotEmpty(message = "пароль не может быть пустым")
+    //    @NotEmpty(message = "пароль не может быть пустым")
 //    @Size(min = 4, message = "пароль должен быть от 4 символов")
     @Column(name = "password")
     private String password;
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany
     @JoinTable(
             name = "person_role",
             joinColumns = @JoinColumn(name = "person_id"),
@@ -115,7 +112,6 @@ public class Person {
     public void setRoles(List<Role> roles) {
         this.roles = roles;
     }
-
 
 
     @Override

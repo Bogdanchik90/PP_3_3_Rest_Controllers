@@ -3,8 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <title>edit</title>
+    <style>
+        .logout-btn {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            padding: 10px 20px;
+            background-color: #f2f2f2;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
+
+<form th:action="@{/logout}" th:method="POST">
+    <input class="logout-btn" type="submit" value="Выйти">
+</form>
 
 <form th:method="PATCH" th:action="@{/edit}" th:object="${editUser}">
     <input type="hidden" name="id" th:value="${editUser.getId()}">
@@ -27,10 +43,10 @@
     <br>
     <label>Роль:
         <input type="checkbox" name="roles"
-        th:each="role : ${roles}"
-        th:text="${role.getName()}"
-        th:value="${role.getId()}"
-        th:field="*{roles}">
+               th:each="role : ${roles}"
+               th:text="${role.getName()}"
+               th:value="${role.getId()}"
+               th:field="*{roles}">
     </label>
     <br>
     <label for="password">Введите пароль</label>
