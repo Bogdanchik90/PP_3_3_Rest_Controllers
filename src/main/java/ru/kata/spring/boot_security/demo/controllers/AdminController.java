@@ -6,58 +6,55 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.kata.spring.boot_security.demo.models.Person;
-import ru.kata.spring.boot_security.demo.services.PersonDetailsService;
-import ru.kata.spring.boot_security.demo.services.RoleService;
-import ru.kata.spring.boot_security.demo.util.PersonValidator;
+import ru.kata.spring.boot_security.demo.services.PersonServiceImpl;
+import ru.kata.spring.boot_security.demo.services.RoleServiceImpl;
 
 import javax.validation.Valid;
-import java.util.List;
+import java.util.Set;
 
 @Controller
 public class AdminController {
 
-    private final PersonDetailsService personDetailsService;
-    private final PersonValidator personValidator;
-    private final RoleService roleService;
+    private final String redirect = "redirect:/admin";
+    private final PersonServiceImpl personService;
+    private final RoleServiceImpl roleService;
 
     @Autowired
-    public AdminController(PersonDetailsService personDetailsService, PersonValidator personValidator, RoleService roleService) {
-        this.personDetailsService = personDetailsService;
-        this.personValidator = personValidator;
+    public AdminController(PersonServiceImpl personService, RoleServiceImpl roleService) {
+        this.personService = personService;
         this.roleService = roleService;
     }
 
 
     @GetMapping("/admin")
     public String adminPage(Model model) {
-        model.addAttribute("person", personDetailsService.getAllPeople());
+        model.addAttribute("person", personService.getAllPeople());
         return "/hello/admin";
     }
 
-    @GetMapping("/edit")
-    public String editUser(@RequestParam("id") int id, Model model) {
-        model.addAttribute("editUser", personDetailsService.getById(id));
+    @GetMapping("/edit/{id}")
+    public String editUser(@PathVariable("id") int id, Model model) {
+        model.addAttribute("editUser", personService.getUserById(id));
         model.addAttribute("roles", roleService.getAllRoles());
         return "/admin/edit";
     }
 
-    @PatchMapping("/edit")
-    public String update(@RequestParam("id") int id, @ModelAttribute("editUser") @Valid Person updatePerson,
-                         @RequestParam(value = "roles", required = false) List<Integer> roleIds,
+    @PatchMapping("/edit/{id}")
+    public String update(@PathVariable("id") int id, @ModelAttribute("editUser") @Valid Person updatePerson,
+                         @RequestParam(value = "roles", required = false) Set<Integer> roleIds,
                          BindingResult bindingResult) {
 
-        personValidator.validate(updatePerson, bindingResult);
 
-        if (bindingResult.hasErrors() && !(updatePerson.getPassword().isEmpty()))
+        if (bindingResult.hasErrors())
             return "/admin/edit";
 
-        personDetailsService.updateUserById(id, updatePerson, roleIds);
-        return "redirect:/admin";
+        personService.editUserAndHisRoles(id, updatePerson, roleIds);
+        return redirect;
     }
 
-    @DeleteMapping("/delete")
-    public String delete(@RequestParam("id") int id) {
-        personDetailsService.deleteById(id);
-        return "redirect:/admin";
+    @DeleteMapping("/delete/{id}")
+    public String delete(@PathVariable("id") int id) {
+        personService.deleteUserById(id);
+        return redirect;
     }
 }

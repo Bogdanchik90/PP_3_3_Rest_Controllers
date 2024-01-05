@@ -50,14 +50,12 @@
         <td th:text="${user.getRoles()}"></td>
         <td th:text="${user.getPassword()}"></td>
         <td>
-            <form th:action="@{/edit}" th:method="GET">
-                <input type="hidden" name="id" th:value="${user.getId()}">
+            <form th:action="@{/edit/{id}(id = ${user.getId()})}" th:method="GET">
                 <button type="submit">Изменить</button>
             </form>
         </td>
         <td>
-            <form th:action="@{/delete}" th:method="DELETE">
-                <input type="hidden" name="id" th:value="${user.getId()}">
+            <form th:action="@{/delete/{id}(id = ${user.getId()})}" th:method="DELETE">
                 <button type="submit">Удалить</button>
             </form>
         </td>

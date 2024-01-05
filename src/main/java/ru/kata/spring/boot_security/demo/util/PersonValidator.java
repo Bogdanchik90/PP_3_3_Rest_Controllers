@@ -6,17 +6,17 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 import ru.kata.spring.boot_security.demo.models.Person;
-import ru.kata.spring.boot_security.demo.services.PersonDetailsService;
+import ru.kata.spring.boot_security.demo.services.PersonServiceImpl;
 
 
 @Component
 public class PersonValidator implements Validator {
 
-    private final PersonDetailsService personDetailsService;
+    private final PersonServiceImpl personService;
 
     @Autowired
-    public PersonValidator(PersonDetailsService personDetailsService) {
-        this.personDetailsService = personDetailsService;
+    public PersonValidator(PersonServiceImpl personService) {
+        this.personService = personService;
     }
 
     @Override
@@ -28,7 +28,7 @@ public class PersonValidator implements Validator {
     public void validate(Object target, Errors errors) {
         Person person = (Person) target;
         try {
-            personDetailsService.loadUserByUsername(person.getUsername());
+            personService.loadUserByUsername(person.getUsername());
         } catch (UsernameNotFoundException ignored) {
             return;
         }

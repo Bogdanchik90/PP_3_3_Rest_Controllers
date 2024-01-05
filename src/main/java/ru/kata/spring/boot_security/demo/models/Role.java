@@ -2,11 +2,12 @@ package ru.kata.spring.boot_security.demo.models;
 
 
 import javax.persistence.*;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
-@Table(name = "role")
+@Table(name = "roles")
 public class Role {
     @Id
     @Column(name = "id")
@@ -14,13 +15,13 @@ public class Role {
     private int id;
     @Column(name = "name")
     private String name;
-    @ManyToMany(mappedBy = "roles", fetch = FetchType.EAGER)
-    private List<Person> persons;
+    @ManyToMany(mappedBy = "roles")
+    private Set<Person> persons = new HashSet<>();
 
     public Role() {
     }
 
-    public Role(int id, String name, List<Person> persons) {
+    public Role(int id, String name, Set<Person> persons) {
         this.id = id;
         this.name = name;
         this.persons = persons;
@@ -42,11 +43,11 @@ public class Role {
         this.name = name;
     }
 
-    public List<Person> getPersons() {
+    public Set<Person> getPersons() {
         return persons;
     }
 
-    public void setPersons(List<Person> persons) {
+    public void setPersons(Set<Person> persons) {
         this.persons = persons;
     }
 

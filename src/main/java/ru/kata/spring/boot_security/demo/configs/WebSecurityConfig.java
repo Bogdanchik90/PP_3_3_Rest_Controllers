@@ -8,19 +8,18 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import ru.kata.spring.boot_security.demo.services.PersonDetailsService;
+import ru.kata.spring.boot_security.demo.services.PersonServiceImpl;
 
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private final SuccessUserHandler successUserHandler;
 
-
-    private final PersonDetailsService personDetailsService;
+    private final PersonServiceImpl personService;
 
     @Autowired
-    public WebSecurityConfig(SuccessUserHandler successUserHandler, PersonDetailsService personDetailsService) {
+    public WebSecurityConfig(SuccessUserHandler successUserHandler, PersonServiceImpl personService) {
         this.successUserHandler = successUserHandler;
-        this.personDetailsService = personDetailsService;
+        this.personService = personService;
     }
 
     @Override
@@ -42,9 +41,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(personDetailsService)
+        auth.userDetailsService(personService)
                 .passwordEncoder(passwordEncoder());
     }
+
 
     @Bean
     public static PasswordEncoder passwordEncoder() {

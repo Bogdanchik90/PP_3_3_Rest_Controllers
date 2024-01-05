@@ -1,18 +1,24 @@
 package ru.kata.spring.boot_security.demo.models;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
+
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
-@Table(name = "Person")
+@Table(name = "person")
 public class Person {
     @Id
-    @Column(name = "person_id")
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
@@ -34,18 +40,19 @@ public class Person {
     @Column(name = "email")
     private String email;
 
-    //    @NotEmpty(message = "пароль не может быть пустым")
-//    @Size(min = 4, message = "пароль должен быть от 4 символов")
+
     @Column(name = "password")
     private String password;
-    @ManyToMany
+    @ManyToMany(cascade = {CascadeType.MERGE}, fetch = FetchType.LAZY)
+    @LazyCollection(LazyCollectionOption.EXTRA)
+    @Fetch(FetchMode.JOIN)
     @JoinTable(
-            name = "person_role",
+            name = "person_roles",
             joinColumns = @JoinColumn(name = "person_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private List<Role> roles;
+    private Set<Role> roles = new HashSet<>();
 
-    public Person(String username, String lastName, int age, String email, String password, List<Role> roles) {
+    public Person(String username, String lastName, int age, String email, String password, Set<Role> roles) {
         this.username = username;
         this.lastName = lastName;
         this.age = age;
@@ -105,11 +112,11 @@ public class Person {
         this.password = password;
     }
 
-    public List<Role> getRoles() {
+    public Set<Role> getRoles() {
         return roles;
     }
 
-    public void setRoles(List<Role> roles) {
+    public void setRoles(Set<Role> roles) {
         this.roles = roles;
     }
 

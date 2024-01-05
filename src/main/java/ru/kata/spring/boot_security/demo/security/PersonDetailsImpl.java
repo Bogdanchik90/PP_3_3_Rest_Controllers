@@ -8,11 +8,11 @@ import ru.kata.spring.boot_security.demo.models.Person;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
-public class PersonDetails implements UserDetails {
+public class PersonDetailsImpl implements UserDetails {
     private final Person person;
 
 
-    public PersonDetails(Person person) {
+    public PersonDetailsImpl(Person person) {
         this.person = person;
     }
 

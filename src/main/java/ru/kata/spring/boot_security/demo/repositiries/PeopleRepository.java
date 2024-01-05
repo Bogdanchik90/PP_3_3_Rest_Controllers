@@ -13,13 +13,12 @@ public interface PeopleRepository extends JpaRepository<Person, Integer> {
     @Query("Select u from Person u left join fetch u.roles where u.username=:username")
     Optional<Person> findByUsername(String username);
 
-    @Override
+
     void deleteById(Integer integer);
 
 
-    @Override
     Person getById(Integer integer);
 
-    @Override
+
     List<Person> findAll();
 }

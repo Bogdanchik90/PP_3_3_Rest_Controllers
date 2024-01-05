@@ -9,49 +9,51 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.kata.spring.boot_security.demo.models.Person;
 import ru.kata.spring.boot_security.demo.models.Role;
 import ru.kata.spring.boot_security.demo.repositiries.PeopleRepository;
-import ru.kata.spring.boot_security.demo.security.PersonDetails;
+import ru.kata.spring.boot_security.demo.security.PersonDetailsImpl;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import static ru.kata.spring.boot_security.demo.configs.WebSecurityConfig.passwordEncoder;
 
 @Service
-public class PersonDetailsService implements UserDetailsService {
+public class PersonServiceImpl implements PersonService, UserDetailsService {
     private PeopleRepository peopleRepository;
-    private final RoleService roleService;
+    private final RoleServiceImpl roleService;
 
     @Autowired
-    public PersonDetailsService(PeopleRepository peopleRepository, RoleService roleService) {
+    public PersonServiceImpl(PeopleRepository peopleRepository, RoleServiceImpl roleService) {
         this.peopleRepository = peopleRepository;
         this.roleService = roleService;
     }
 
+
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<Person> person = peopleRepository.findByUsername(username);
-
-        if (person.isEmpty())
-            throw new UsernameNotFoundException("Пользователь не найден");
-
-        return new PersonDetails(person.get());
-    }
-
     public List<Person> getAllPeople() {
         return peopleRepository.findAll();
     }
 
-    public Optional<Person> getPersonByName(String username) {
-        return peopleRepository.findByUsername(username);
+    @Override
+    @Transactional
+    public void addUser(Person person, Set<Integer> roleIds) {
+        if (roleIds != null) {
+            Set<Role> selectedRole = roleService.getRolesByIds(roleIds);
+            person.setRoles(selectedRole);
+        }
+        person.setPassword(passwordEncoder().encode(person.getPassword()));
+        peopleRepository.save(person);
     }
 
+    @Override
     @Transactional
-    public void deleteById(int id) {
+    public void deleteUserById(int id) {
         peopleRepository.deleteById(id);
     }
 
+    @Override
     @Transactional
-    public void updateUserById(int id, Person personDetails, List<Integer> roleIds) {
+    public void editUserAndHisRoles(int id, Person personDetails, Set<Integer> roleIds) {
         Optional<Person> optionalPerson = peopleRepository.findById(id);
         if (optionalPerson.isPresent()) {
             Person person = optionalPerson.get();
@@ -61,7 +63,7 @@ public class PersonDetailsService implements UserDetailsService {
             person.setAge(personDetails.getAge());
             person.setEmail(personDetails.getEmail());
             if (roleIds != null) {
-                List<Role> selectedRole = roleService.getRolesByIds(roleIds);
+                Set<Role> selectedRole = roleService.getRolesByIds(roleIds);
                 person.setRoles(selectedRole);
             }
             if (!personDetails.getPassword().isEmpty()) {
@@ -73,17 +75,23 @@ public class PersonDetailsService implements UserDetailsService {
         }
     }
 
-    @Transactional
-    public void register(Person person, List<Integer> roleIds) {
-        if (roleIds != null) {
-            List<Role> selectedRole = roleService.getRolesByIds(roleIds);
-            person.setRoles(selectedRole);
-        }
-        person.setPassword(passwordEncoder().encode(person.getPassword()));
-        peopleRepository.save(person);
+    @Override
+    public Person getUserById(int id) {
+        return peopleRepository.getById(id);
     }
 
-    public Person getById(int id) {
-        return peopleRepository.getById(id);
+
+    public Optional<Person> getPersonByName(String username) {
+        return peopleRepository.findByUsername(username);
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        Optional<Person> person = peopleRepository.findByUsername(username);
+
+        if (person.isEmpty())
+            throw new UsernameNotFoundException("Пользователь не найден");
+
+        return new PersonDetailsImpl(person.get());
     }
 }
