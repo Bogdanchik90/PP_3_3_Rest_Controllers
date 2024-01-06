@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.kata.spring.boot_security.demo.dao.PersonDaoImpl;
 import ru.kata.spring.boot_security.demo.models.Person;
 import ru.kata.spring.boot_security.demo.security.PersonDetailsImpl;
+//import ru.kata.spring.boot_security.demo.security.PersonDetailsImpl;
 
 import java.util.List;
 import java.util.Optional;
