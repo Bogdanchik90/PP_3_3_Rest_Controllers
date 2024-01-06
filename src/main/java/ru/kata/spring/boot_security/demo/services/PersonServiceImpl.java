@@ -6,88 +6,61 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.kata.spring.boot_security.demo.dao.PersonDaoImpl;
 import ru.kata.spring.boot_security.demo.models.Person;
-import ru.kata.spring.boot_security.demo.models.Role;
-import ru.kata.spring.boot_security.demo.repositiries.PeopleRepository;
 import ru.kata.spring.boot_security.demo.security.PersonDetailsImpl;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import static ru.kata.spring.boot_security.demo.configs.WebSecurityConfig.passwordEncoder;
 
 @Service
 public class PersonServiceImpl implements PersonService, UserDetailsService {
-    private PeopleRepository peopleRepository;
-    private final RoleServiceImpl roleService;
+    private PersonDaoImpl personDao;
 
     @Autowired
-    public PersonServiceImpl(PeopleRepository peopleRepository, RoleServiceImpl roleService) {
-        this.peopleRepository = peopleRepository;
-        this.roleService = roleService;
+    public PersonServiceImpl(PersonDaoImpl personDao) {
+        this.personDao = personDao;
     }
 
 
     @Override
     public List<Person> getAllPeople() {
-        return peopleRepository.findAll();
+        return personDao.getAllUsers();
     }
 
     @Override
     @Transactional
     public void addUser(Person person, Set<Integer> roleIds) {
-        if (roleIds != null) {
-            Set<Role> selectedRole = roleService.getRolesByIds(roleIds);
-            person.setRoles(selectedRole);
-        }
-        person.setPassword(passwordEncoder().encode(person.getPassword()));
-        peopleRepository.save(person);
+        personDao.addUser(person, roleIds);
     }
 
     @Override
     @Transactional
     public void deleteUserById(int id) {
-        peopleRepository.deleteById(id);
+        personDao.deleteUserById(id);
     }
 
     @Override
     @Transactional
     public void editUserAndHisRoles(int id, Person personDetails, Set<Integer> roleIds) {
-        Optional<Person> optionalPerson = peopleRepository.findById(id);
-        if (optionalPerson.isPresent()) {
-            Person person = optionalPerson.get();
-
-            person.setUsername(personDetails.getUsername());
-            person.setLastName(personDetails.getLastName());
-            person.setAge(personDetails.getAge());
-            person.setEmail(personDetails.getEmail());
-            if (roleIds != null) {
-                Set<Role> selectedRole = roleService.getRolesByIds(roleIds);
-                person.setRoles(selectedRole);
-            }
-            if (!personDetails.getPassword().isEmpty()) {
-                person.setPassword(passwordEncoder().encode(personDetails.getPassword()));
-            }
-            peopleRepository.save(person);
-        } else {
-            throw new RuntimeException("Пользователь с таким id не найден");
-        }
+        personDao.editUserAndHisRoles(id, personDetails, roleIds);
     }
 
     @Override
     public Person getUserById(int id) {
-        return peopleRepository.getById(id);
+        return personDao.getUserById(id);
     }
 
 
     public Optional<Person> getPersonByName(String username) {
-        return peopleRepository.findByUsername(username);
+        return personDao.getPersonByName(username);
     }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<Person> person = peopleRepository.findByUsername(username);
+        Optional<Person> person = personDao.getPersonByName(username);
 
         if (person.isEmpty())
             throw new UsernameNotFoundException("Пользователь не найден");
