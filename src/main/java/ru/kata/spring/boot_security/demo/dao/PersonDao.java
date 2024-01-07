@@ -16,6 +16,7 @@ public interface PersonDao {
     void deleteUserById(int id);
 
     Person getUserById(int id);
+    boolean isTableUsersEmpty();
 
     Optional<Person> getPersonByName(String username);
 }

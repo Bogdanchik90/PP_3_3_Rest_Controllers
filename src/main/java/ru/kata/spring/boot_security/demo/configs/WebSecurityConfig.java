@@ -8,28 +8,23 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.SecurityFilterChain;
 import ru.kata.spring.boot_security.demo.services.PersonServiceImpl;
 
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private final SuccessUserHandler successUserHandler;
 
-    /*private final AuthProviderImpl authProvider;*/
-
     private final PersonServiceImpl personService;
 
     @Autowired
-    public WebSecurityConfig(SuccessUserHandler successUserHandler, /*AuthProviderImpl authProvider,*/ PersonServiceImpl personService) {
+    public WebSecurityConfig(SuccessUserHandler successUserHandler, PersonServiceImpl personService) {
         this.successUserHandler = successUserHandler;
-        /*this.authProvider = authProvider;*/
         this.personService = personService;
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http/*.authenticationProvider(authProvider)*/
-                .authorizeRequests()
+        http.authorizeRequests()
                 .antMatchers("/admin/**").hasRole("ADMIN")
                 .antMatchers("/auth/login", "/auth/registration", "/error").permitAll()
                 .anyRequest().hasAnyRole("USER", "ADMIN")

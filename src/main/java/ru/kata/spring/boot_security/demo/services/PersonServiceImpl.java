@@ -9,7 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.kata.spring.boot_security.demo.dao.PersonDaoImpl;
 import ru.kata.spring.boot_security.demo.models.Person;
 import ru.kata.spring.boot_security.demo.security.PersonDetailsImpl;
-//import ru.kata.spring.boot_security.demo.security.PersonDetailsImpl;
 
 import java.util.List;
 import java.util.Optional;
@@ -67,5 +66,10 @@ public class PersonServiceImpl implements PersonService, UserDetailsService {
             throw new UsernameNotFoundException("Пользователь не найден");
 
         return new PersonDetailsImpl(person.get());
+    }
+
+    @Override
+    public boolean isTableUsersEmpty() {
+        return personDao.isTableUsersEmpty();
     }
 }

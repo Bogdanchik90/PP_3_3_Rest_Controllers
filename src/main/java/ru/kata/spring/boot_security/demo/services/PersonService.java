@@ -16,4 +16,6 @@ public interface PersonService {
 
     Person getUserById(int id);
 
+    boolean isTableUsersEmpty();
+
 }

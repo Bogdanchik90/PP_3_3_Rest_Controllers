@@ -20,7 +20,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Entity
-@Table(name = "person")
+@Table(name = "users")
 public class Person {
     @Id
     @Column(name = "id")
@@ -52,8 +52,8 @@ public class Person {
     @LazyCollection(LazyCollectionOption.EXTRA)
     @Fetch(FetchMode.JOIN)
     @JoinTable(
-            name = "person_roles",
-            joinColumns = @JoinColumn(name = "person_id"),
+            name = "users_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
 
@@ -124,7 +124,6 @@ public class Person {
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
     }
-
 
     @Override
     public boolean equals(Object o) {
