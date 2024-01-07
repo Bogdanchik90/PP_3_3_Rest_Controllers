@@ -8,6 +8,7 @@ import ru.kata.spring.boot_security.demo.services.RoleService;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -27,7 +28,9 @@ public class PersonDaoImpl implements PersonDao {
     private EntityManager entityManager;
     @Override
     public boolean isTableUsersEmpty() {
-        return entityManager.createQuery("SELECT COUNT(*) FROM Person ").getResultList().isEmpty();
+        Query query = entityManager.createQuery("SELECT COUNT(*) FROM Person");
+        Long count = (Long) query.getSingleResult();
+        return count == 0;
     }
 
     @Override
