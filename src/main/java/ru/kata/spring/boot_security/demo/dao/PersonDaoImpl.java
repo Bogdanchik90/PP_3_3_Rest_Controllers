@@ -28,9 +28,7 @@ public class PersonDaoImpl implements PersonDao {
     private EntityManager entityManager;
     @Override
     public boolean isTableUsersEmpty() {
-        Query query = entityManager.createQuery("SELECT COUNT(*) FROM Person ");
-        Long count = (Long) query.getSingleResult();
-        return count == 0;
+        return entityManager.createQuery("SELECT COUNT(*) FROM Person ").getResultList().isEmpty();
     }
 
     @Override

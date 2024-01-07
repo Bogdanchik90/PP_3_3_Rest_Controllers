@@ -4,16 +4,16 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.kata.spring.boot_security.demo.models.Person;
-import ru.kata.spring.boot_security.demo.services.PersonServiceImpl;
+import ru.kata.spring.boot_security.demo.services.PersonService;
 
 import java.security.Principal;
 
 @Controller
 public class HelloController {
 
-    private final PersonServiceImpl personService;
+    private final PersonService personService;
 
-    public HelloController(PersonServiceImpl personService) {
+    public HelloController(PersonService personService) {
         this.personService = personService;
     }
 

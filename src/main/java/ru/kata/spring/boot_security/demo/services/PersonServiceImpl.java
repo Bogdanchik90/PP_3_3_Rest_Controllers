@@ -6,7 +6,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.kata.spring.boot_security.demo.dao.PersonDaoImpl;
+import ru.kata.spring.boot_security.demo.dao.PersonDao;
 import ru.kata.spring.boot_security.demo.models.Person;
 import ru.kata.spring.boot_security.demo.security.PersonDetailsImpl;
 
@@ -17,10 +17,10 @@ import java.util.Set;
 
 @Service
 public class PersonServiceImpl implements PersonService, UserDetailsService {
-    private PersonDaoImpl personDao;
+    private PersonDao personDao;
 
     @Autowired
-    public PersonServiceImpl(PersonDaoImpl personDao) {
+    public PersonServiceImpl(PersonDao personDao) {
         this.personDao = personDao;
     }
 
@@ -53,7 +53,7 @@ public class PersonServiceImpl implements PersonService, UserDetailsService {
         return personDao.getUserById(id);
     }
 
-
+    @Override
     public Optional<Person> getPersonByName(String username) {
         return personDao.getPersonByName(username);
     }

@@ -6,8 +6,8 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.kata.spring.boot_security.demo.models.Person;
-import ru.kata.spring.boot_security.demo.services.PersonServiceImpl;
-import ru.kata.spring.boot_security.demo.services.RoleServiceImpl;
+import ru.kata.spring.boot_security.demo.services.PersonService;
+import ru.kata.spring.boot_security.demo.services.RoleService;
 
 import javax.validation.Valid;
 import java.util.Set;
@@ -16,11 +16,11 @@ import java.util.Set;
 public class AdminController {
 
     private final String redirect = "redirect:/admin";
-    private final PersonServiceImpl personService;
-    private final RoleServiceImpl roleService;
+    private final PersonService personService;
+    private final RoleService roleService;
 
     @Autowired
-    public AdminController(PersonServiceImpl personService, RoleServiceImpl roleService) {
+    public AdminController(PersonService personService, RoleService roleService) {
         this.personService = personService;
         this.roleService = roleService;
     }

@@ -6,8 +6,8 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.kata.spring.boot_security.demo.models.Person;
-import ru.kata.spring.boot_security.demo.services.PersonServiceImpl;
-import ru.kata.spring.boot_security.demo.services.RoleServiceImpl;
+import ru.kata.spring.boot_security.demo.services.PersonService;
+import ru.kata.spring.boot_security.demo.services.RoleService;
 import ru.kata.spring.boot_security.demo.util.PersonValidator;
 
 import javax.validation.Valid;
@@ -18,12 +18,12 @@ import java.util.Set;
 public class AuthController {
 
     private final PersonValidator personValidator;
-    private final PersonServiceImpl personService;
-    private final RoleServiceImpl roleService;
+    private final PersonService personService;
+    private final RoleService roleService;
 
     @Autowired
     public AuthController(PersonValidator personValidator,
-                          PersonServiceImpl personService, RoleServiceImpl roleService) {
+                          PersonService personService, RoleService roleService) {
         this.personValidator = personValidator;
         this.personService = personService;
         this.roleService = roleService;

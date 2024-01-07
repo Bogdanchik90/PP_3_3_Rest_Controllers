@@ -4,6 +4,7 @@ package ru.kata.spring.boot_security.demo.util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.kata.spring.boot_security.demo.models.Person;
+import ru.kata.spring.boot_security.demo.services.PersonService;
 import ru.kata.spring.boot_security.demo.services.PersonServiceImpl;
 
 import javax.annotation.PostConstruct;
@@ -15,7 +16,7 @@ import java.util.Set;
 @Component
 public class InitDataUtil {
 
-    private final PersonServiceImpl personService;
+    private final PersonService personService;
 
     @Autowired
     public InitDataUtil(PersonServiceImpl personService) {
