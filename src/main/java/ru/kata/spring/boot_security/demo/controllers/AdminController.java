@@ -11,6 +11,7 @@ import ru.kata.spring.boot_security.demo.services.RoleService;
 import ru.kata.spring.boot_security.demo.util.PersonValidator;
 
 import javax.validation.Valid;
+import java.security.Principal;
 import java.util.Set;
 
 @Controller
@@ -30,8 +31,10 @@ public class AdminController {
     }
 
     @GetMapping("")
-    public String adminPage(Model model) {
-        model.addAttribute("person", personService.getAllPeople());
+    public String adminPage(Model model, Principal principal) {
+        Person person = personService.getPersonByName(principal.getName()).orElse(null);
+        model.addAttribute("person", person);
+        model.addAttribute("users", personService.getAllPeople());
         return "/hello/admin";
     }
 
@@ -43,10 +46,8 @@ public class AdminController {
     }
 
     @PatchMapping("/edit/{id}")
-    public String update(@PathVariable("id") int id, @ModelAttribute("editUser") @Valid Person updatePerson,
-                         @RequestParam(value = "roles", required = false) Set<Integer> roleIds,
-                         BindingResult bindingResult) {
-
+    public String update(@PathVariable("id") int id, @ModelAttribute("editUser") @Valid Person updatePerson, BindingResult bindingResult,
+                         @RequestParam(value = "roles", required = false) Set<Integer> roleIds) {
 
         if (bindingResult.hasErrors())
             return "/admin/edit";
@@ -68,9 +69,8 @@ public class AdminController {
     }
 
     @PostMapping("/add")
-    public String performRegistration(@ModelAttribute("person") @Valid Person person,
-                                      @RequestParam(value = "roles", required = false) Set<Integer> roleIds,
-                                      BindingResult bindingResult) {
+    public String performRegistration(@ModelAttribute("person") @Valid Person person, BindingResult bindingResult,
+                                      @RequestParam(value = "roles", required = false) Set<Integer> roleIds) {
         personValidator.validate(person, bindingResult);
 
         if (bindingResult.hasErrors())

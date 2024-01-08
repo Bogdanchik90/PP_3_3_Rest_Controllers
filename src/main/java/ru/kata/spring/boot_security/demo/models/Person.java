@@ -4,20 +4,16 @@ import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
-import java.util.Collection;
+
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "users")
@@ -27,9 +23,9 @@ public class Person {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
+    @Column(name = "user_name")
     @NotEmpty(message = "имя не должно быть пустым")
     @Size(min = 2, max = 60, message = "имя должно быть от 2 до 60 символов")
-    @Column(name = "user_name")
     private String username;
 
     @NotEmpty(message = "фамилия не может быть пустой")
@@ -131,6 +127,16 @@ public class Person {
         if (o == null || getClass() != o.getClass()) return false;
         Person person = (Person) o;
         return id == person.id && age == person.age && Objects.equals(username, person.username) && Objects.equals(lastName, person.lastName) && Objects.equals(email, person.email) && Objects.equals(password, person.password);
+    }
+
+    public String getRolesString() {
+        if (roles.toString().contains("ADMIN") && roles.toString().contains("USER")) {
+            return "ADMIN USER";
+        } else if (roles.toString().contains("USER")) {
+            return "USER";
+        } else if (roles.toString().contains("ADMIN")) {
+            return "ADMIN";
+        } return "NO ROLES";
     }
 
     @Override
