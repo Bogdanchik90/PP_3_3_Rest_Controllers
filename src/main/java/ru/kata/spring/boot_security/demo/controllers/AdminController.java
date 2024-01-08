@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.kata.spring.boot_security.demo.models.Person;
 import ru.kata.spring.boot_security.demo.services.PersonService;
 import ru.kata.spring.boot_security.demo.services.RoleService;
+import ru.kata.spring.boot_security.demo.util.PersonValidator;
 
 import javax.validation.Valid;
 import java.util.Set;
@@ -17,11 +18,13 @@ public class AdminController {
 
     private final String redirect = "redirect:/admin";
     private final PersonService personService;
+    private final PersonValidator personValidator;
     private final RoleService roleService;
 
     @Autowired
-    public AdminController(PersonService personService, RoleService roleService) {
+    public AdminController(PersonService personService, PersonValidator personValidator, RoleService roleService) {
         this.personService = personService;
+        this.personValidator = personValidator;
         this.roleService = roleService;
     }
 
@@ -55,6 +58,25 @@ public class AdminController {
     @DeleteMapping("/delete/{id}")
     public String delete(@PathVariable("id") int id) {
         personService.deleteUserById(id);
+        return redirect;
+    }
+
+    @GetMapping("/registration")
+    public String registrationPage(@ModelAttribute("person") Person person, Model model) {
+        model.addAttribute("roles", roleService.getAllRoles());
+        return "/auth/registration";
+    }
+
+    @PostMapping("/registration")
+    public String performRegistration(@ModelAttribute("person") @Valid Person person,
+                                      @RequestParam(value = "roles", required = false) Set<Integer> roleIds,
+                                      BindingResult bindingResult) {
+        personValidator.validate(person, bindingResult);
+
+        if (bindingResult.hasErrors())
+            return "/auth/registration";
+
+        personService.addUser(person, roleIds);
         return redirect;
     }
 }
