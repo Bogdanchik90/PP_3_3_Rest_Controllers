@@ -14,6 +14,7 @@ import javax.validation.Valid;
 import java.util.Set;
 
 @Controller
+@RequestMapping("/admin")
 public class AdminController {
 
     private final String redirect = "redirect:/admin";
@@ -28,8 +29,7 @@ public class AdminController {
         this.roleService = roleService;
     }
 
-
-    @GetMapping("/admin")
+    @GetMapping("")
     public String adminPage(Model model) {
         model.addAttribute("person", personService.getAllPeople());
         return "/hello/admin";
@@ -61,20 +61,20 @@ public class AdminController {
         return redirect;
     }
 
-    @GetMapping("/registration")
+    @GetMapping("/add")
     public String registrationPage(@ModelAttribute("person") Person person, Model model) {
         model.addAttribute("roles", roleService.getAllRoles());
-        return "/auth/registration";
+        return "/admin/add";
     }
 
-    @PostMapping("/registration")
+    @PostMapping("/add")
     public String performRegistration(@ModelAttribute("person") @Valid Person person,
                                       @RequestParam(value = "roles", required = false) Set<Integer> roleIds,
                                       BindingResult bindingResult) {
         personValidator.validate(person, bindingResult);
 
         if (bindingResult.hasErrors())
-            return "/auth/registration";
+            return "/admin/add";
 
         personService.addUser(person, roleIds);
         return redirect;

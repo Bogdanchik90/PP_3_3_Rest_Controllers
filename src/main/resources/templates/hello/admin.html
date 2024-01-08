@@ -50,12 +50,12 @@
         <td th:text="${user.getRoles()}"></td>
         <td th:text="${user.getPassword()}"></td>
         <td>
-            <form th:action="@{/edit/{id}(id = ${user.getId()})}" th:method="GET">
+            <form th:action="@{/admin/edit/{id}(id = ${user.getId()})}" th:method="GET">
                 <button type="submit">Изменить</button>
             </form>
         </td>
         <td>
-            <form th:action="@{/delete/{id}(id = ${user.getId()})}" th:method="DELETE">
+            <form th:action="@{/admin/delete/{id}(id = ${user.getId()})}" th:method="DELETE">
                 <button type="submit">Удалить</button>
             </form>
         </td>
@@ -63,7 +63,7 @@
     </tbody>
 </table>
 <br><br>
-<button onclick="location.href='/registration'">Добавить пользователя в БД</button>
+<button onclick="location.href='/admin/add'">Добавить пользователя в БД</button>
 
 </body>
 </html>
