@@ -30,19 +30,25 @@ public class AdminController {
         this.roleService = roleService;
     }
 
+    @ModelAttribute("person")
+    public Person getPerson() {
+        return new Person();
+    }
+
     @GetMapping("")
     public String adminPage(Model model, Principal principal) {
         Person person = personService.getPersonByName(principal.getName()).orElse(null);
         model.addAttribute("person", person);
         model.addAttribute("users", personService.getAllPeople());
-        return "/hello/admin";
+        model.addAttribute("roles", roleService.getAllRoles());
+        return "/admin";
     }
 
     @GetMapping("/edit/{id}")
     public String editUser(@PathVariable("id") int id, Model model) {
         model.addAttribute("editUser", personService.getUserById(id));
         model.addAttribute("roles", roleService.getAllRoles());
-        return "/admin/edit";
+        return "/admin";
     }
 
     @PatchMapping("/edit/{id}")
@@ -50,11 +56,20 @@ public class AdminController {
                          @RequestParam(value = "roles", required = false) Set<Integer> roleIds) {
 
         if (bindingResult.hasErrors())
-            return "/admin/edit";
+            return "/admin";
 
         personService.editUserAndHisRoles(id, updatePerson, roleIds);
         return redirect;
     }
+
+    @GetMapping("/delete/{id}")
+    public String deleteUser(@PathVariable("id") int id,
+                             @ModelAttribute("deleteUser") Person deleteUser,
+                             Model model) {
+        model.addAttribute("deleteUser", personService.getUserById(id));
+        return "/admin";
+    }
+
 
     @DeleteMapping("/delete/{id}")
     public String delete(@PathVariable("id") int id) {
@@ -65,8 +80,9 @@ public class AdminController {
     @GetMapping("/add")
     public String registrationPage(@ModelAttribute("person") Person person, Model model) {
         model.addAttribute("roles", roleService.getAllRoles());
-        return "/admin/add";
+        return "/admin";
     }
+
 
     @PostMapping("/add")
     public String performRegistration(@ModelAttribute("person") @Valid Person person, BindingResult bindingResult,
@@ -74,7 +90,7 @@ public class AdminController {
         personValidator.validate(person, bindingResult);
 
         if (bindingResult.hasErrors())
-            return "/admin/add";
+            return "/admin";
 
         personService.addUser(person, roleIds);
         return redirect;

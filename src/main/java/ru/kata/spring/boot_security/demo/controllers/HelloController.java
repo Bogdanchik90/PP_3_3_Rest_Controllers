@@ -17,12 +17,12 @@ public class HelloController {
         this.personService = personService;
     }
 
-    @GetMapping("/hello")
+    @GetMapping("/user")
     public String sayHello(Model model, Principal principal) {
         Person person = personService.getPersonByName(principal.getName()).orElse(null);
 
         model.addAttribute("person", person);
-        return "/hello/index";
+        return "/index";
     }
 
 }
