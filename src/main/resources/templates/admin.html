@@ -15,7 +15,8 @@
 <!--навбар главный -->
 <nav class="navbar navbar-expand-xxl navbar-dark bg-dark">
     <div class="container-fluid">
-        <a class="navbar-brand" th:if="${person != null}" th:object="${person}" th:text="${person.getEmail()}">Navbar</a>
+        <a class="navbar-brand" th:if="${person != null}" th:object="${person}"
+           th:text="${person.getEmail()}">Navbar</a>
         <a class="navbar-brand">with roles:</a>
         <a class="navbar-brand" th:if="${person != null}" th:object="${person}" th:text="${person.getRolesString()}">Roles</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarDark"
@@ -35,6 +36,7 @@
 <div class="row">
     <div class="col-sm-2">
 
+        <!--        кнопки навигации ролями-->
         <br>
         <div class="d-grid gap-2">
 
@@ -42,7 +44,7 @@
                     onclick="location.href='/admin'" autocomplete="off">Admin
             </button>
             <button type="button" class="btn btn-outline-primary" data-bs-toggle="button"
-                    onclick="location.href='/hello'" autocomplete="off">User
+                    onclick="location.href='/user'" autocomplete="off">User
             </button>
 
         </div>
@@ -54,10 +56,9 @@
             <div class="row">
                 <div class="col-8 col-lg">
 
-
                     <h1>Admin panel</h1>
 
-
+<!--                    навбар для админа-->
                     <nav>
                         <div class="nav nav-tabs" id="nav-tab" role="tablist">
                             <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab"
@@ -73,6 +74,8 @@
                     </nav>
 
                     <div class="tab-content" id="nav-tabContent">
+
+<!--                        таблица со всеми пользователями-->
                         <div class="tab-pane fade show active" id="nav-home" role="tabpanel"
                              aria-labelledby="nav-home-tab">
 
@@ -107,7 +110,8 @@
                                                       th:action="@{/admin/edit/{id}(id=${user.getId()})}"
                                                       method="GET">
                                                     <button type="submit"
-                                                            class="btn btn-primary">Edit</button>
+                                                            class="btn btn-primary">Edit
+                                                    </button>
                                                 </form>
                                             </td>
                                             <td>
@@ -124,11 +128,13 @@
                             </div>
                         </div>
 
+<!--                        добавление пользователя-->
                         <div class="tab-pane fade" id="nav-profile" role="tabpanel"
                              aria-labelledby="nav-profile-tab"
                              tabindex="0">
 
-                            <form class="card"
+                            <form th:if="${person != null}"
+                                  class="card"
                                   th:action="@{/admin/add}"
                                   th:method="POST"
                                   th:object="${person}">
@@ -182,7 +188,6 @@
                                         <label for="inputAge" th:errors="*{age}"
                                                th:if="${#fields.hasErrors('age')}"></label>
                                     </div>
-
 
 
                                     <div class="form-floating mb-3">
@@ -244,8 +249,7 @@
             <div class="modal-content">
 
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5 bi-pencil-square"
-                        id="editModalLabel"> Edit user</h1>
+                    <h1 id="editModalLabel"> Edit user</h1>
                     <button type="button" class="btn-close"
                             data-bs-dismiss="modal"
                             aria-label="Close"></button>
@@ -348,8 +352,7 @@
             <div class="modal-content">
 
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5 bi-trash3"
-                        id="deleteModalLabel">Delete user</h1>
+                    <h1 id="deleteModalLabel">Delete user</h1>
                     <button type="button" class="btn-close"
                             data-bs-dismiss="modal"
                             aria-label="Close"></button>
@@ -408,8 +411,6 @@
         </form>
     </div>
 </div>
-
-
 
 
 <script type="text/javascript" src="/js/bootstrap.bundle.js"></script>
