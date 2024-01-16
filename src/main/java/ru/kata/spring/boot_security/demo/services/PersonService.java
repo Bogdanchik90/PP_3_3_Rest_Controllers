@@ -9,7 +9,7 @@ import java.util.Set;
 public interface PersonService {
     List<Person> getAllPeople();
 
-    void addUser(Person person, Set<Integer> roleIds);
+    Integer addUser(Person person, Set<Integer> roleIds);
 
     void deleteUserById(int id);
 

@@ -32,8 +32,8 @@ public class PersonServiceImpl implements PersonService, UserDetailsService {
 
     @Override
     @Transactional
-    public void addUser(Person person, Set<Integer> roleIds) {
-        personDao.addUser(person, roleIds);
+    public Integer addUser(Person person, Set<Integer> roleIds) {
+        return personDao.addUser(person, roleIds);
     }
 
     @Override

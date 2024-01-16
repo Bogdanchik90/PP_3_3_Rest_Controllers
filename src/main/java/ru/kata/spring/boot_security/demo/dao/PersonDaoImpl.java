@@ -1,14 +1,14 @@
 package ru.kata.spring.boot_security.demo.dao;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.Query;
 import org.springframework.stereotype.Repository;
 import ru.kata.spring.boot_security.demo.models.Person;
 import ru.kata.spring.boot_security.demo.models.Role;
 import ru.kata.spring.boot_security.demo.services.RoleService;
 
-import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
-import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -39,13 +39,14 @@ public class PersonDaoImpl implements PersonDao {
     }
 
     @Override
-    public void addUser(Person person, Set<Integer> roleIds) {
+    public Integer addUser(Person person, Set<Integer> roleIds) {
         if (roleIds != null) {
             Set<Role> selectedRole = roleService.getRolesByIds(roleIds);
             person.setRoles(selectedRole);
         }
         person.setPassword(passwordEncoder().encode(person.getPassword()));
-        entityManager.merge(person);
+        Person savedPerson = entityManager.merge(person);
+        return savedPerson.getId();
     }
 
     @Override

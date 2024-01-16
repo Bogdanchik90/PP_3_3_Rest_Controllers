@@ -9,7 +9,7 @@ import java.util.Set;
 public interface PersonDao {
     List<Person> getAllUsers();
 
-    void addUser(Person person, Set<Integer> roleIds);
+    Integer addUser(Person person, Set<Integer> roleIds);
 
     void editUserAndHisRoles(int id, Person personDetails, Set<Integer> roleIds);
 
