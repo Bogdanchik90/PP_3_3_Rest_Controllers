@@ -45,7 +45,7 @@ public class AdminController {
 
   @GetMapping("/roles/{id}")
   public ResponseEntity<Collection<Role>> getRole(@PathVariable("id") Long id) {
-    return new ResponseEntity<>(roleService.getRolesByIds(id), HttpStatus.OK);
+    return new ResponseEntity<>(userService.findUserById(id).getRoles(), HttpStatus.OK);
   }
 
   @GetMapping("/users/{id}")
