@@ -5,6 +5,7 @@ import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -12,7 +13,6 @@ import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 
 @Entity
@@ -56,12 +56,12 @@ public class User implements UserDetails {
   @JoinTable(name = "users_roles",
       joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
       inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
-  private Collection<Role> roles;
+  private Collection <Role> roles;
 
   public User() {
   }
 
-  public User(String username, String lastname, Byte age, String email, String password, Collection<Role> roles) {
+  public User(String username, String lastname, Byte age, String email, String password, List<Role> roles) {
     this.username = username;
     this.lastname = lastname;
     this.age = age;

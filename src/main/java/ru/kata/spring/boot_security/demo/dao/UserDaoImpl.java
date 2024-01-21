@@ -40,18 +40,20 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public void editUser(User userDetails) {
-        User user = entityManager.find(User.class, userDetails);
+    public void editUser(User userDetails, Long id) {
+        User user = entityManager.find(User.class, id);
         if (user != null) {
             user.setUsername(userDetails.getUsername());
             user.setLastname(userDetails.getLastname());
             user.setAge(userDetails.getAge());
             user.setEmail(userDetails.getEmail());
-            user.setRoles(userDetails.getRoles());
+            if (!userDetails.getRoles().isEmpty()) {
+                user.setRoles(userDetails.getRoles());
+            }
             if (!userDetails.getPassword().isEmpty()) {
                 user.setPassword(passwordEncoder().encode(userDetails.getPassword()));
             }
-            entityManager.merge(user);
+            entityManager.merge(userDetails);
         } else {
             throw new RuntimeException("Пользователь с таким id не найден");
         }

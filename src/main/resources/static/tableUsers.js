@@ -15,7 +15,7 @@ function getAllUsers() {
 
             for (let user of users) {
 
-                // rolesString = rolesToString(user.roles);
+                rolesString = rolesToString(user.roles);
 
                 dataOfUsers += `<tr>
                         <td>${user.id}</td>
@@ -52,11 +52,11 @@ function getAllUsers() {
         })
 }
 
-// function rolesToString(roles) {
-//     let rolesString = '';
-//     for (const element of roles) {
-//         rolesString += (element.name.toString().replace('ROLE_', '') + ', ');
-//     }
-//     rolesString = rolesString.substring(0, rolesString.length - 2);
-//     return rolesString;
-// }
+function rolesToString(roles) {
+    let rolesString = '';
+    for (const element of roles) {
+        rolesString += (element.name.toString().replace('ROLE_', '') + ', ');
+    }
+    rolesString = rolesString.substring(0, rolesString.length - 2);
+    return rolesString;
+}

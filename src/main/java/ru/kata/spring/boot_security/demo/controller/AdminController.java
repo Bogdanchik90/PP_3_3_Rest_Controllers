@@ -45,7 +45,7 @@ public class AdminController {
 
   @GetMapping("/roles/{id}")
   public ResponseEntity<Collection<Role>> getRole(@PathVariable("id") Long id) {
-    return new ResponseEntity<>(userService.findUserById(id).getRoles(), HttpStatus.OK);
+    return new ResponseEntity<>(roleService.getRolesByIds(id), HttpStatus.OK);
   }
 
   @GetMapping("/users/{id}")
@@ -57,12 +57,11 @@ public class AdminController {
   public ResponseEntity<User> addUser(@RequestBody @Valid User userNew) {
     userService.add(userNew);
     return new ResponseEntity<>(userNew, HttpStatus.OK);
-
   }
 
   @PatchMapping("/users/{id}")
-  public ResponseEntity<User> updateUser(@RequestBody User user) {
-    userService.update(user);
+  public ResponseEntity<User> updateUser(@RequestBody User user, @PathVariable("id") Long id) {
+    userService.update(user, id);
     return new ResponseEntity<>(user, HttpStatus.OK);
   }
 

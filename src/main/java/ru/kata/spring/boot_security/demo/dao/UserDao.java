@@ -11,7 +11,7 @@ public interface UserDao {
 
     Long addUser(User user);
 
-    void editUser(User userDetails/*, Set<Integer> roleIds*/);
+    void editUser(User userDetails, Long id);
 
     void deleteUserById(Long id);
 

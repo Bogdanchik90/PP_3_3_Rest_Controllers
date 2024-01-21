@@ -9,5 +9,5 @@ import java.util.Set;
 
 public interface RoleDao {
     List<Role> getAllRoles();
-
+    Collection<Role> getRolesByIds(Long roleIds);
 }
