@@ -1,52 +1,55 @@
 package ru.kata.spring.boot_security.demo.util;
 
 
-import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import ru.kata.spring.boot_security.demo.models.Person;
-import ru.kata.spring.boot_security.demo.services.PersonService;
-import ru.kata.spring.boot_security.demo.services.PersonServiceImpl;
+import ru.kata.spring.boot_security.demo.model.Role;
+import ru.kata.spring.boot_security.demo.model.User;
+import ru.kata.spring.boot_security.demo.service.RoleService;
+import ru.kata.spring.boot_security.demo.service.UserService;
 
-
-import java.util.Collections;
-import java.util.Set;
+import javax.annotation.PostConstruct;
+import java.util.*;
 
 
 @Component
 public class InitDataUtil {
 
-    private final PersonService personService;
+    private final UserService userService;
+    private final RoleService roleService;
 
     @Autowired
-    public InitDataUtil(PersonServiceImpl personService) {
-        this.personService = personService;
+    public InitDataUtil(UserService userService, RoleService roleService) {
+        this.userService = userService;
+        this.roleService = roleService;
     }
 
     @PostConstruct
     public void init() {
 
-        if (personService.isTableUsersEmpty()) {
-            Person person1 = new Person();
-            person1.setUsername("user");
-            person1.setLastName("user");
-            person1.setAge(10);
-            person1.setEmail("user@mail.ru");
-            person1.setPassword("user");
+        if (userService.isTableUsersEmpty()) {
+            List<Role> roles = roleService.getAllRole();
+
+            User user1 = new User();
+            user1.setUsername("user");
+            user1.setLastname("user");
+            user1.setAge((byte)10);
+            user1.setEmail("user@mail.ru");
+            user1.setPassword("user");
+            user1.setRoles(Collections.singleton(roles.get(0)));
+
+            User user2 = new User();
+            user2.setUsername("admin");
+            user2.setLastname("admin");
+            user2.setAge((byte)10);
+            user2.setEmail("admin@mail.ru");
+            user2.setPassword("admin");
+            user2.setRoles(Collections.singleton(roles.get(1)));
 
 
-            Person person2 = new Person();
-            person2.setUsername("admin");
-            person2.setLastName("admin");
-            person2.setAge(10);
-            person2.setEmail("admin@mail.ru");
-            person2.setPassword("admin");
 
-            Set<Integer> user = Collections.singleton(1);
-            Set<Integer> admin = Collections.singleton(2);
-
-            personService.addUser(person1, user);
-            personService.addUser(person2, admin);
+            userService.add(user1);
+            userService.add(user2);
         }
 
     }

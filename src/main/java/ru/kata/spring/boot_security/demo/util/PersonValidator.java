@@ -5,30 +5,30 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
-import ru.kata.spring.boot_security.demo.models.Person;
-import ru.kata.spring.boot_security.demo.services.PersonServiceImpl;
+import ru.kata.spring.boot_security.demo.model.User;
+import ru.kata.spring.boot_security.demo.service.UserServiceImpl;
 
 
 @Component
 public class PersonValidator implements Validator {
 
-    private final PersonServiceImpl personService;
+    private final UserServiceImpl userService;
 
     @Autowired
-    public PersonValidator(PersonServiceImpl personService) {
-        this.personService = personService;
+    public PersonValidator(UserServiceImpl userService) {
+        this.userService = userService;
     }
 
     @Override
     public boolean supports(Class<?> clazz) {
-        return Person.class.equals(clazz);
+        return User.class.equals(clazz);
     }
 
     @Override
     public void validate(Object target, Errors errors) {
-        Person person = (Person) target;
+        User person = (User) target;
         try {
-            personService.loadUserByUsername(person.getUsername());
+            userService.findByUsername(person.getUsername());
         } catch (UsernameNotFoundException ignored) {
             return;
         }

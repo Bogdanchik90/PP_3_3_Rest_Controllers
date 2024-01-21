@@ -1,78 +1,63 @@
 package ru.kata.spring.boot_security.demo.configs;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.SecurityFilterChain;
-import ru.kata.spring.boot_security.demo.services.PersonServiceImpl;
 
-@EnableWebSecurity
+
 @Configuration
-public class WebSecurityConfig {
-//    private final SuccessUserHandler successUserHandler;
+@EnableWebSecurity
+public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private final PersonServiceImpl personService;
+  private final UserDetailsService userDetailsService;
+  private final SuccessUserHandler successUserHandler;
 
-    @Autowired
-    public WebSecurityConfig(/*SuccessUserHandler successUserHandler,*/ PersonServiceImpl personService) {
-//        this.successUserHandler = successUserHandler;
-        this.personService = personService;
-    }
+  @Autowired
+  public WebSecurityConfig(UserDetailsService userDetailsService, SuccessUserHandler successUserHandler) {
+    this.userDetailsService = userDetailsService;
+    this.successUserHandler = successUserHandler;
+  }
 
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.authorizeHttpRequests((authorize) -> authorize
-                .requestMatchers("/api/**").permitAll())
-                .csrf(AbstractHttpConfigurer::disable);
-        return http.build();
-//        http/*.authorizeRequests()*/
-////                .antMatchers("/admin/**").hasRole("ADMIN")
-////                .antMatchers("/login", "/error").permitAll()
-//                .antMatchers("/api/**").permitAll()
-//                .anyRequest().hasAnyRole("USER", "ADMIN")
-//                .and()
-//                .formLogin()
-//                .successHandler(successUserHandler)
-//                .failureUrl("/login?error")
-//                .and()
-//                .logout()
-//                .logoutUrl("/logout")
-//                .logoutSuccessUrl("/login");
-//        http.csrf().disable()
-//                .authorizeRequests()
-//                .antMatchers("/api/**").permitAll()
-//                .anyRequest().permitAll();
+  @Override
+  protected void configure(HttpSecurity http) throws Exception {
+    http
+        .csrf().disable()
+//            .authorizeRequests().anyRequest().permitAll()
+        .authorizeRequests()
+        .antMatchers("/api/user/**").hasAnyRole("USER", "ADMIN")
+        .antMatchers("/api/admin/**").hasRole("ADMIN")
+        .anyRequest().authenticated()
+        .and()
+        .formLogin().successHandler(successUserHandler).permitAll()
+        .and()
+        .logout().permitAll();
+  }
 
-    }
+  @Override
+  protected void configure(AuthenticationManagerBuilder auth) {
+    auth.authenticationProvider(authenticationProvider());
+  }
 
+  @Bean
+  public static PasswordEncoder passwordEncoder() {
+    return new BCryptPasswordEncoder();
+  }
 
-//    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-//        auth.userDetailsService(personService)
-//                .passwordEncoder(passwordEncoder());
-//    }
+  @Bean
+  public AuthenticationProvider authenticationProvider() {
+    DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
+    authenticationProvider.setPasswordEncoder(passwordEncoder());
+    authenticationProvider.setUserDetailsService(userDetailsService);
+    return authenticationProvider;
+  }
 
-    @Bean
-    public ModelMapper modelMapper() {
-        ModelMapper modelMapper = new ModelMapper();
-        modelMapper.getConfiguration().setAmbiguityIgnored(true);
-        return modelMapper;
-    }
-
-    @Bean
-    public ObjectMapper objectMapper() {
-        return new ObjectMapper();
-    }
-
-    @Bean
-    public static PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
 }
