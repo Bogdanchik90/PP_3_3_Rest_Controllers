@@ -16,9 +16,9 @@ import static ru.kata.spring.boot_security.demo.configs.WebSecurityConfig.passwo
 @Repository
 public class UserDaoImpl implements UserDao {
 
-
     @PersistenceContext
     private EntityManager entityManager;
+
     @Override
     public boolean isTableUsersEmpty() {
         Query query = entityManager.createQuery("SELECT COUNT(*) FROM User ");
@@ -50,10 +50,10 @@ public class UserDaoImpl implements UserDao {
             if (!userDetails.getRoles().isEmpty()) {
                 user.setRoles(userDetails.getRoles());
             }
-            if (!userDetails.getPassword().isEmpty()) {
+            if (!userDetails.getPassword().isEmpty() && !user.getPassword().equals(userDetails.getPassword())) {
                 user.setPassword(passwordEncoder().encode(userDetails.getPassword()));
             }
-            entityManager.merge(userDetails);
+            entityManager.merge(user);
         } else {
             throw new RuntimeException("Пользователь с таким id не найден");
         }

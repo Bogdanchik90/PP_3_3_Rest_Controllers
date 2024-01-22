@@ -8,6 +8,7 @@ async function editModal(id) {
     await open_fill_modal(formEdit, modalEdit, id);
     loadRolesForEdit();
 }
+
 function editUser() {
     formEdit.addEventListener("submit", ev => {
         ev.preventDefault();
@@ -16,7 +17,7 @@ function editUser() {
         for (let i = 0; i < formEdit.roles.options.length; i++) {
             if (formEdit.roles.options[i].selected) rolesForEdit.push({
                 id: formEdit.roles.options[i].value,
-                role: "ROLE_" + formEdit.roles.options[i].text
+                name: "ROLE_" + formEdit.roles.options[i].text
             });
         }
 
@@ -57,5 +58,5 @@ function loadRolesForEdit() {
         })
         .catch(error => console.error(error));
 }
-window.addEventListener("load", loadRolesForEdit);
 
+window.addEventListener("load", loadRolesForEdit);

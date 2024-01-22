@@ -1,6 +1,5 @@
 package ru.kata.spring.boot_security.demo.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.LazyCollection;
@@ -20,6 +19,7 @@ public class User implements UserDetails {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "id")
   private Long id;
 
 
@@ -52,9 +52,9 @@ public class User implements UserDetails {
   @LazyCollection(LazyCollectionOption.EXTRA)
   @Fetch(FetchMode.JOIN)
   @JoinTable(name = "users_roles",
-      joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
-      inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
-  private Collection <Role> roles;
+          joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+          inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
+  private Collection<Role> roles;
 
   public User() {
   }
@@ -126,6 +126,7 @@ public class User implements UserDetails {
   public void setRoles(Collection<Role> roles) {
     this.roles = roles;
   }
+
 
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {

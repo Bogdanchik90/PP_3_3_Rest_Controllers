@@ -21,6 +21,7 @@ function deleteU() {
         });
     });
 }
+
 function loadRolesForDelete() {
     let selectDelete = document.getElementById("delete-roles");
     selectDelete.innerHTML = "";
@@ -39,10 +40,3 @@ function loadRolesForDelete() {
 }
 
 window.addEventListener("load", loadRolesForDelete);
-
-
-
-
-
-
-

@@ -7,18 +7,18 @@ import java.util.Optional;
 
 public interface UserService {
 
-  List<User> getAllUsers();
+    List<User> getAllUsers();
 
-  Optional<User> findByUsername(String username);
+    Optional<User> findByUsername(String username);
 
-  User findUserById(Long id);
+    User findUserById(Long id);
 
-  void update(User user, Long id);
+    void update(User user, Long id);
 
-  void add(User user);
+    void add(User user);
 
-  void delete(Long id);
+    void delete(Long id);
 
-  boolean isTableUsersEmpty();
+    boolean isTableUsersEmpty();
 
 }

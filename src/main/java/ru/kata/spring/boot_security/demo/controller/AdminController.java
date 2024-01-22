@@ -29,7 +29,7 @@ public class AdminController {
 
 
   @GetMapping("/info")
-  public ResponseEntity<User> infoAboutUser (Principal principal) {
+  public ResponseEntity<User> infoAboutUser(Principal principal) {
     return new ResponseEntity<>(userService.findByUsername(principal.getName()).orElse(null), HttpStatus.OK);
   }
 
@@ -61,6 +61,7 @@ public class AdminController {
 
   @PatchMapping("/users/{id}")
   public ResponseEntity<User> updateUser(@RequestBody User user, @PathVariable("id") Long id) {
+
     userService.update(user, id);
     return new ResponseEntity<>(user, HttpStatus.OK);
   }

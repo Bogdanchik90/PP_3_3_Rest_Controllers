@@ -22,7 +22,7 @@ public class UserController {
   }
 
   @GetMapping("/info")
-  public ResponseEntity<User> infoAboutUser (Principal principal) {
+  public ResponseEntity<User> infoAboutUser(Principal principal) {
     return new ResponseEntity<>(userService.findByUsername(principal.getName()).orElse(null), HttpStatus.OK);
   }
 }

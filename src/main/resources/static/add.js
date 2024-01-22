@@ -11,7 +11,7 @@ function createNewUser() {
             if (add.roles.options[i].selected)
                 rolesForNewUser.push({
                     id: add.roles.options[i].value,
-                    role: "ROLE_" + add.roles.options[i].text
+                    name: "ROLE_" + add.roles.options[i].text
                 });
         }
 
